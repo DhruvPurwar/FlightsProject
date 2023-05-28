@@ -15,7 +15,8 @@ class CrudRepository {
     //   Logger.error("Something went wrong in Crud Repo: Create");
     //   throw error;
     // }
-
+    console.log("CRUD REPO DATA");
+    console.log(data);
     const response = await this.model.create(data);
     return response;
   }
