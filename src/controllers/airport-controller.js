@@ -12,6 +12,7 @@ const { SuccessResponse, ErrorResponse } = require("../utils/common");
 async function createAirport(req, res) {
   try {
     // Controller redirect req to services.
+    console.log("No error");
     const airport = await AirportService.createAirport({
       name: req.body.name,
       code: req.body.code,
