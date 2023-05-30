@@ -32,6 +32,7 @@ class FlightRepository extends CrudRepository {
               Sequelize.col("departureAirport.code")
             ),
           },
+          //   Multi-level Joins
           include: {
             model: City,
             required: true,
