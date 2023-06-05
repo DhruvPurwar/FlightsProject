@@ -1,6 +1,9 @@
 const CrudRepository = require("./crud-repository");
 const { Sequelize, Op } = require("sequelize");
 const { Flights, Airplane, Airport, City } = require("../models");
+const { addRowLockOnFlights } = require("./queries");
+
+const db = require("../models");
 
 class FlightRepository extends CrudRepository {
   constructor() {
@@ -56,6 +59,20 @@ class FlightRepository extends CrudRepository {
     });
 
     return response;
+  }
+
+  async updateRemainingSeats(flightId, seats, dec = true) {
+    await db.sequelize.query(addRowLockOnFlights(flightId));
+    //  The "FOR UPDATE" in above query puts row lock since we dont want different users to access the decrement/increment function concurrently
+    const flight = await Flights.findByPk(flightId);
+    if (parseInt(dec)) {
+      await flight.decrement("totalSeats", { by: seats });
+      // return res;  increment/decrement return old data.
+    } else {
+      await flight.increment("totalSeats", { by: seats });
+    }
+    // await flight.save();
+    return flight;
   }
 }
 
